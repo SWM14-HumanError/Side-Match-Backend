@@ -121,19 +121,6 @@ public class UserProfileService {
 
         userThumbnailUpdate(request, user);
 
-        // UserSnsLink update
-        // todo: request DTO 필드가 널이면 아래와 같이 가정문으로 해결할 수밖에 없나?
-        /*
-         * 계정을 새로 만들거나 소개를 작성하지 않으면 userProfile 없을 수도 있기 때문에
-         * user 연결된 userProfile 생성한다.
-         */
-//
-//        // 요구사항 변경으로 userProfile은 반드시 생성된다.
-//        if (userProfile == null || userProfile.getId() == null) {
-//            userProfile = UserProfile.builder().user(user).build();
-//            userProfileRepository.save(userProfile);
-//        }
-
         userSnsLinkRepository.deleteByUserProfile(userProfile);
         if (request.getLink() != null) {
             List<UserSnsLink> userSnsLinks = request.getLink().entrySet().stream()
@@ -231,18 +218,6 @@ public class UserProfileService {
                 .filter(userPosition -> !userPositionMap.keySet().stream().toList().contains(userPosition.getType()))
                 .toList();
         userPositionRepository.deleteAll(deletedUserPositions);
-
-//                userPositionRepository.deleteAllByUser(user);
-//        if (request.getProfileTagPositionRequests() != null) {
-//            List<UserPosition> userPositions = request.getProfileTagPositionRequests().stream()
-//                    .map(profileTagPositionRequest -> UserPosition.builder()
-//                            .type(profileTagPositionRequest.getType())
-//                            .typeLevel(profileTagPositionRequest.getTypeLevel())
-//                            .user(user)
-//                            .build())
-//                    .collect(Collectors.toCollection(ArrayList::new));
-//            userPositionRepository.saveAll(userPositions);
-//        }
     }
 
 
