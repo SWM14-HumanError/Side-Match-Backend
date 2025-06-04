@@ -1,10 +1,11 @@
 package com.example.matchup.matchupbackend.controller;
 
+import com.example.matchup.matchupbackend.dto.request.feed.FeedCommentCreateOrUpdateRequest;
 import com.example.matchup.matchupbackend.dto.request.feed.FeedCreateOrUpdateRequest;
 import com.example.matchup.matchupbackend.dto.request.feed.FeedSearchRequest;
-import com.example.matchup.matchupbackend.dto.request.feed.FeedCommentCreateOrUpdateRequest;
-import com.example.matchup.matchupbackend.dto.response.feed.FeedSliceResponse;
 import com.example.matchup.matchupbackend.dto.response.feed.FeedCommentSliceResponse;
+import com.example.matchup.matchupbackend.dto.response.feed.FeedSearchResponse;
+import com.example.matchup.matchupbackend.dto.response.feed.FeedSliceResponse;
 import com.example.matchup.matchupbackend.entity.Comment;
 import com.example.matchup.matchupbackend.entity.Feed;
 import com.example.matchup.matchupbackend.service.FeedService;
@@ -50,6 +51,12 @@ public class FeedController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/feed/{feed_id}")
+    public ResponseEntity<FeedSearchResponse> showDetailFeed(@RequestHeader(value = HEADER_AUTHORIZATION) String authorizationHeader, @PathVariable("feed_id") Long feedId) {
+        FeedSearchResponse response = feedService.getFeedDetail(authorizationHeader, feedId);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/feed/{feed_id}")
@@ -137,4 +144,6 @@ public class FeedController {
     public int checkFeedLike(@PathVariable("feed_id") Long feedId) {
         return feedService.getFeedLikes(feedId);
     }
+
+
 }

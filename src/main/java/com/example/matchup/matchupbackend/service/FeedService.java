@@ -2,13 +2,13 @@ package com.example.matchup.matchupbackend.service;
 
 import com.example.matchup.matchupbackend.dto.FeedSearchType;
 import com.example.matchup.matchupbackend.dto.UploadFile;
+import com.example.matchup.matchupbackend.dto.request.feed.FeedCommentCreateOrUpdateRequest;
 import com.example.matchup.matchupbackend.dto.request.feed.FeedCreateOrUpdateRequest;
 import com.example.matchup.matchupbackend.dto.request.feed.FeedSearchRequest;
-import com.example.matchup.matchupbackend.dto.request.feed.FeedCommentCreateOrUpdateRequest;
-import com.example.matchup.matchupbackend.dto.response.feed.FeedSearchResponse;
-import com.example.matchup.matchupbackend.dto.response.feed.FeedSliceResponse;
 import com.example.matchup.matchupbackend.dto.response.feed.FeedCommentResponse;
 import com.example.matchup.matchupbackend.dto.response.feed.FeedCommentSliceResponse;
+import com.example.matchup.matchupbackend.dto.response.feed.FeedSearchResponse;
+import com.example.matchup.matchupbackend.dto.response.feed.FeedSliceResponse;
 import com.example.matchup.matchupbackend.entity.*;
 import com.example.matchup.matchupbackend.error.exception.AuthorizeException;
 import com.example.matchup.matchupbackend.error.exception.DuplicateEx.DuplicateFeedEx.DuplicateLikeException;
@@ -66,7 +66,7 @@ public class FeedService {
 
         List<FeedSearchResponse> responseFeeds = new ArrayList<>();
         for (Feed feed : feeds) {
-            FeedSearchResponse feedSearchResponse = FeedSearchResponse.builder().user(feed.getUser()).feed(feed).build();
+            FeedSearchResponse feedSearchResponse = FeedSearchResponse.fromEntity(feed);
             boolean isLiked = false;
             if (user != null) {
                 isLiked = likeRepository.existsLikeByFeedAndUser(feed, user);
@@ -81,6 +81,13 @@ public class FeedService {
         response.setHasNextSlice(hasNextFeedSlice(request, pageable));
 
         return response;
+    }
+
+    public FeedSearchResponse getFeedDetail(String authorizationHeader, Long feedId){
+        tokenProvider.getUserId(authorizationHeader, "getFeedDetail");
+        Feed feed = feedRepository.findFeedJoinUserById(feedId)
+                .orElseThrow(FeedNotFoundException::new);
+        return FeedSearchResponse.fromEntity(feed);
     }
 
     // todo: refactoring, hasNextSlice할 필요없이 하나의 query로 카운트 할 수 있음.
@@ -122,7 +129,6 @@ public class FeedService {
                 try {
                     Long countQuery = em.createQuery(jpql, Long.class)
                             .getSingleResult();
-                    //                log.info("카운트 쿼리 " + Long.toString(countQuery));
                     return countQuery > ((pageable.getPageNumber() + 1L) * pageable.getPageSize());
                 } catch (Exception e) {
                     return false;

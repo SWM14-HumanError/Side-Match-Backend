@@ -107,7 +107,7 @@ public class TokenProvider {
      */
     public Long getUserId(String authorizationHeader, String callBack) {
         if (authorizationHeader != null && Arrays.asList(environment.getActiveProfiles()).contains("local") && authorizationHeader.startsWith("test")) {
-            return userRepository.findUserByNickname(authorizationHeader).orElseThrow(() -> new UserNotFoundException("테스트 유저가 없습니다.")).getId();
+            return userRepository.findUserByNickname(authorizationHeader).orElseThrow(() -> new UserNotFoundException("가입 된 유저가 아닙니다.")).getId();
         }
 
         String token = getAccessToken(authorizationHeader);
@@ -132,7 +132,7 @@ public class TokenProvider {
 
     public User getUser(String authorizationHeader, String callBack) {
         if (authorizationHeader != null && Arrays.asList(environment.getActiveProfiles()).contains("local") && authorizationHeader.startsWith("test")) {
-            return userRepository.findUserByNickname(authorizationHeader).orElseThrow(() -> new UserNotFoundException("테스트 유저가 없습니다."));
+            return userRepository.findUserByNickname(authorizationHeader).orElseThrow(() -> new UserNotFoundException("가입 된 유저가 아닙니다."));
         }
 
         String token = getAccessToken(authorizationHeader);
