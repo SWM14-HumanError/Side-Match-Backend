@@ -100,5 +100,4 @@ public class UserController {
     public void deleteUser(@RequestHeader(value = HEADER_AUTHORIZATION) String authorizationHeader){
         userService.deleteUser(authorizationHeader);
     }
-
 }
