@@ -58,7 +58,7 @@ public class UserService {
     private final MentoringRepository mentoringRepository;
     private final TeamRepository teamRepository;
     private final TeamUserRepository teamUserRepository;
-
+    
     public SliceUserCardResponse searchSliceUserCard(UserSearchRequest userSearchRequest, Pageable pageable) {
         Slice<User> userListByUserRequest = userRepository.findUserListByUserRequest(userSearchRequest, pageable);
         SliceUserCardResponse sliceUserCardResponse = SliceUserCardResponse.builder()
