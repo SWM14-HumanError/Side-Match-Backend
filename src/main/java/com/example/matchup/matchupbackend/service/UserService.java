@@ -40,7 +40,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.matchup.matchupbackend.global.config.oauth.handler.OAuth2SuccessHandler.*;
-
+    
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
